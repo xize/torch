@@ -1,0 +1,20 @@
+name: torch
+version: 1.0
+description: allows you to light up caves with a torch in your hand
+author: xize
+authors: [] 
+website:
+
+main: tv.mineinthebox.torch.torch
+database: false
+depend: []
+softdepend: []
+
+commands:
+  torch:
+    description: command to use torch
+    aliases: []
+    permission:
+    permission-message:
+
+permissions:
