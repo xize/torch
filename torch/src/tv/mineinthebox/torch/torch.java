@@ -1,8 +1,10 @@
 package tv.mineinthebox.torch;
 
+import java.io.IOException;
 import java.util.logging.Logger;
 
 import org.bukkit.plugin.java.JavaPlugin;
+import org.mcstats.MetricsLite;
 
 public class torch extends JavaPlugin {
 	
@@ -21,6 +23,12 @@ public class torch extends JavaPlugin {
 		getCommand("torch").setExecutor(new command());
 		torchEvent.checkPlayers();
 		handler.launch();
+		try {
+			MetricsLite metrics = new MetricsLite(this);
+			metrics.enable();
+		} catch (IOException e) {
+			//ignore any exceptions we come across here.
+		}
 	}
 	
 	public void onDisable() {
