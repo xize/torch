@@ -30,14 +30,16 @@ public class torchEvent implements Listener {
 	@EventHandler
 	public static void torch(PlayerMoveEvent e) {
 		if(isTorch(e.getPlayer())) {
-			if(e.getPlayer().getItemInHand().getType() == Material.TORCH) {
-				Block block = e.getPlayer().getLocation().getBlock().getRelative(BlockFace.DOWN);
-				if(block.getType() == Material.AIR || block.getType() == Material.WATER || block.getType() == Material.STATIONARY_WATER || block.getType() == Material.LAVA || block.getType() == Material.STATIONARY_LAVA) {
-					return;
+			if(e.getFrom().distance(e.getTo()) > 0) {
+				if(e.getPlayer().getItemInHand().getType() == Material.TORCH) {
+					Block block = e.getPlayer().getLocation().getBlock().getRelative(BlockFace.DOWN);
+					if(block.getType() == Material.AIR || block.getType() == Material.WATER || block.getType() == Material.STATIONARY_WATER || block.getType() == Material.LAVA || block.getType() == Material.STATIONARY_LAVA || block.getType() == Material.LONG_GRASS || block.getType() == Material.RED_ROSE || block.getType().isTransparent()) {
+						return;
+					}
+					e.getPlayer().sendBlockChange(block.getLocation(), Material.GLOWSTONE, block.getData());
+					getTrailList(e.getPlayer()).add(block.getState());
+					removeGlow(e.getPlayer());
 				}
-				e.getPlayer().sendBlockChange(block.getLocation(), Material.GLOWSTONE, block.getData());
-				getTrailList(e.getPlayer()).add(block.getState());
-				removeGlow(e.getPlayer());
 			}
 		}
 	}
@@ -88,7 +90,7 @@ public class torchEvent implements Listener {
 			r.printStackTrace();
 		}
 	}
-	
+
 	@EventHandler
 	public void removeTorch(PlayerQuitEvent e) {
 		if(torchPlayers.containsKey(e.getPlayer().getName())) {
@@ -104,14 +106,14 @@ public class torchEvent implements Listener {
 				r.printStackTrace();
 			}
 		}
-		
+
 		if(list.containsKey(e.getPlayer().getName())) {
 			LinkedList<BlockState> blocklist = list.get(e.getPlayer().getName());
 			blocklist.clear();
 			list.remove(e.getPlayer().getName());
 		}
 	}
-	
+
 	@EventHandler
 	public void removeTorch(PlayerKickEvent e) {
 		if(torchPlayers.containsKey(e.getPlayer().getName())) {
@@ -127,14 +129,14 @@ public class torchEvent implements Listener {
 				r.printStackTrace();
 			}
 		}
-		
+
 		if(list.containsKey(e.getPlayer().getName())) {
 			LinkedList<BlockState> blocklist = list.get(e.getPlayer().getName());
 			blocklist.clear();
 			list.remove(e.getPlayer().getName());
 		}
 	}
-	
+
 	public static void checkPlayers() {
 		for(Player p : Bukkit.getOnlinePlayers()) {
 			try {
@@ -151,7 +153,7 @@ public class torchEvent implements Listener {
 			}
 		}
 	}
-	
+
 	public static void savePlayers() {
 		for(Player p : Bukkit.getOnlinePlayers()) {
 			if(torchPlayers.containsKey(p.getName())) {
